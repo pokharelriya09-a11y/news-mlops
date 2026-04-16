@@ -283,3 +283,6 @@ requests.exceptions.ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=8000)
 2026-04-15 21:42:04 | INFO | HTTP Request: GET http://localhost:7860/gradio_api/startup-events "HTTP/1.1 200 OK"
 2026-04-15 21:42:06 | INFO | HTTP Request: HEAD http://localhost:7860/ "HTTP/1.1 200 OK"
 2026-04-15 21:42:06 | INFO | HTTP Request: HEAD https://huggingface.co/api/telemetry/https%3A/api.gradio.app/gradio-launched-telemetry "HTTP/1.1 200 OK"
+2026-04-16 19:50:10 | INFO | Starting FastAPI backend...
+2026-04-16 19:50:10 | INFO | Loading data.json...
+2026-04-16 19:50:10 | INFO | Loaded 50 documents.

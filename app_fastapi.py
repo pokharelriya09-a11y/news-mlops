@@ -7,6 +7,8 @@ import numpy as np
 import requests
 from dotenv import load_dotenv
 import re
+from dotenv import load_dotenv
+load_dotenv()
 
 # -----------------------------
 # Logging Setup 
