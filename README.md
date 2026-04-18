@@ -1,161 +1,237 @@
 # NEWS-MLOPS: Retrieval-Augmented News Query System
 
 ## Overview
-NEWS-MLOPS is an end-to-end MLOps pipeline that implements a Retrieval-Augmented Generation (RAG) system for financial news intelligence.
 
-The system generates news data, preprocesses it, stores it in a database, creates embeddings, and retrieves relevant information to generate contextual answers using a FastAPI backend and an optional Gradio interface.
+NEWS-MLOPS is an end-to-end Machine Learning Operations (MLOps) pipeline implementing a Retrieval-Augmented Generation (RAG) system for financial news intelligence.
 
-The project demonstrates a production-oriented pipeline including data ingestion, feature engineering, vector storage, retrieval, deployment, monitoring, and automation.
+The system processes financial news data, generates embeddings, stores them in a vector database, and retrieves relevant context to generate grounded responses using a FastAPI backend and an optional Gradio user interface.
+
+The project demonstrates a production-oriented pipeline covering data ingestion, preprocessing, feature engineering, retrieval, deployment, monitoring, and automation.
+
+---
+
+## Live Demo
+
+Access the deployed application (no installation required):
+
+https://huggingface.co/spaces/Riya1217/financial-news-rag
+
+---
 
 ## Key Features
-- Programmatic data generation
-- Data ingestion and preprocessing
-- Embedding-based feature engineering (Sentence Transformers)
-- Vector database using ChromaDB
-- Retrieval-Augmented Generation (RAG)
-- FastAPI backend (`/ask` endpoint)
-- Gradio UI for interaction
-- Logging and artifact tracking
-- GitHub Actions automation
-- Docker-ready setup
 
+* Automated data generation and ingestion
+* Text preprocessing and normalization
+* Embedding-based feature engineering (Sentence Transformers)
+* Vector database using ChromaDB
+* Retrieval-Augmented Generation (RAG)
+* FastAPI backend (`/ask` endpoint)
+* Interactive Gradio UI
+* Logging and artifact tracking
+* GitHub Actions pipeline automation
+* Docker-ready environment for reproducibility
+
+---
 
 ## Repository Structure
+
+```
 NEWS-MLOPS/
 │
-├── app_fastapi.py # FastAPI backend
-├── rag.py # Gradio UI
-├── create_data.py # Data generation
-├── ingest_data.py # Data ingestion (JSON → SQLite)
-├── vector_db.py # Embedding + ChromaDB creation
-├── vectordb_query.py # Query + LLM response
-├── search.py # Vector search utility
+├── app_fastapi.py        # FastAPI backend
+├── rag.py                # Gradio UI
+├── create_data.py        # Data generation
+├── ingest_data.py        # Preprocessing (JSON → cleaned text)
+├── vector_db.py          # Embedding + vector DB creation
+├── vectordb_query.py     # Retrieval testing
+├── search.py             # Search utilities
 │
 ├── requirements.txt
 ├── Dockerfile
 │
-├── .devcontainer/
-│
 ├── artifacts/
-│ └── logs.txt
-│
-└── chroma_db/
+│   └── logs.txt          # System logs
+└── chroma_db/            # Persistent vector database
+```
+
+---
 
 ## Pipeline Architecture
 
-Data Generation (create_data.py)
-↓
-Data Ingestion (ingest_data.py)
-↓
-Embedding Generation (vector_db.py)
-↓
-ChromaDB (Vector Store)
-↓
-User Query (API / UI)
-↓
-Retriever
-↓
-RAG + LLM (Groq API)
-↓
-Response via FastAPI
-↓
-Optional Gradio UI
+**Offline Pipeline (Data Flow)**
+SQLite → Data Export → Preprocessing → Embedding Generation → ChromaDB
 
-## How to Run (Local)
+**Online Pipeline (Query Flow)**
+User Query → API/UI → Retrieval → RAG + LLM → Response
 
-### 1. Install dependencies
+---
+
+## How to Run
+
+### Option 1: Use Deployed App (Recommended)
+
+No setup required:
+
+https://huggingface.co/spaces/Riya1217/financial-news-rag
+
+---
+
+### Option 2: Run Locally
+
+1. Clone the repository:
+
+```
+git clone <your-repo-link>
+cd NEWS-MLOPS
+```
+
+2. Install dependencies:
+
+```
 pip install -r requirements.txt
-2. Generate data
+```
+
+3. Create a `.env` file in the root folder:
+
+```
+GROQ_API_KEY=your_api_key_here
+```
+
+4. Run the pipeline:
+
+```
 python create_data.py
-3. Ingest data
 python ingest_data.py
-4. Build vector database
 python vector_db.py
-5. Start backend
+```
+
+5. Start the API:
+
+```
 uvicorn app_fastapi:app --host 0.0.0.0 --port 8000
+```
 
-API Docs:
-
+API docs:
 http://localhost:8000/docs
-Gradio UI (Frontend)
 
-Run:
+6. (Optional) Run UI:
 
+```
 python rag.py
+```
 
-Access:
+---
 
-http://localhost:7860
-API Usage
-Endpoint
-POST /ask
-Example Request
+### Option 3: Run with Docker
+
+Build image:
+
+```
+docker build -t news-mlops .
+```
+
+Run container:
+
+```
+docker run -p 8000:8000 --env-file .env news-mlops
+```
+
+---
+
+## API Usage
+
+**Endpoint:** `POST /ask`
+
+Example request:
+
+```
 {
   "query": "What is happening in global markets?"
 }
-Automation (GitHub Actions)
+```
+
+---
+
+## Automation (GitHub Actions)
 
 The pipeline is automated using GitHub Actions:
 
-Runs every 2 hours
-Can be triggered manually
-Executes full pipeline:
-Data generation
-Data ingestion
-Vector database update
+* Runs every 2 hours
+* Can be triggered manually
+* Executes:
 
-Workflow:
+  * Data generation
+  * Data ingestion
+  * Vector database update
 
+Workflow file:
+
+```
 .github/workflows/schedule.yml
+```
 
-Artifacts
+---
+
+## Artifacts
 
 Stored in:
 
-artifacts/logs.txt
-chroma_db/
+* `artifacts/logs.txt`
+* `chroma_db/`
 
 Includes:
 
-Logs for ingestion, API, retrieval
-Persisted vector database
-Monitoring
+* Logs for ingestion, retrieval, and API activity
+* Persisted vector database
+
+---
+
+## Monitoring
 
 The system logs:
 
-Data ingestion
-Embedding creation
-API requests
-Retrieval results
-Deployment
-Docker (Optional)
+* Data ingestion processes
+* Embedding creation
+* API requests
+* Retrieval results
 
-Build:
+---
 
-docker build -t news-mlops .
+## Deployment
 
-Run:
+The system supports:
 
-docker run -p 8000:8000 news-mlops
+* FastAPI backend (API-based interaction)
+* Gradio frontend (user interface)
+* Docker containerization
+* Cloud deployment via Hugging Face
 
-Reproducibility
+---
 
-The project ensures reproducibility through:
+## Reproducibility
 
-Fixed dependencies (requirements.txt)
-Devcontainer environment
-Automated workflows (GitHub Actions)
-Persisted vector database
-Structured pipeline design
-Important Note
+Reproducibility is ensured through:
 
-The API and UI run as services and must be started manually.
+* Fixed dependencies (`requirements.txt`)
+* Structured pipeline design
+* Docker containerization
+* Devcontainer support (Codespaces)
+* Externalized environment variables (`.env`)
 
-GitHub Actions automates the pipeline but does not host a live API.
+---
 
-Author
+## Important Notes
+
+* `.env` file is required locally and is not included in the repository
+* API and UI must be started manually when running locally
+* GitHub Actions automates the pipeline but does not host the API
+
+---
+
+## Authors
 
 Riya Pokharel
 Sristi Kulung Rai
 
-MSc BDS – Data Engineering and Machine Learning Operations in Business
+MSc Business Data Science
+Data Engineering and Machine Learning Operations in Business
